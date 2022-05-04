@@ -102,7 +102,6 @@ class QLearningAgent(ReinforcementAgent):
 
         # handle the terminal state: there are no legal actions
         legalActions = self.getLegalActions(state)
-        print("legalActions", legalActions)
         if len(legalActions) == 0:
             # return None since there are no legal actions at terminal state
             return None
@@ -162,10 +161,10 @@ class QLearningAgent(ReinforcementAgent):
         next_max_q = self.computeValueFromQValues(nextState)
 
         # update the Q-value with the Bellman equation using the sample
-        new_sample = (reward + self.discount * next_max_q)
-        diff = new_sample - current_value
+        new_sample = reward + self.discount * next_max_q
+
         # update the Q-value
-        self.q_dic[(state, action)] = current_value + self.alpha * diff
+        self.q_dic[(state, action)] = (1 - self.alpha) * current_value + self.alpha * new_sample
 
 
 

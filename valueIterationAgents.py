@@ -65,14 +65,18 @@ class ValueIterationAgent(ValueEstimationAgent):
         "*** YOUR CODE HERE ***"
         # loop through the passed number of iterations
         for i in range(self.iterations):
+
             # loop through all the states in the MDP
             # create temporary dictionary with keys as states and values computed from the current iteration
             temp_dic = util.Counter()
             for s in self.mdp.getStates():
+
                 # find the best action resulting the highest value for the current state
                 best_action = self.computeActionFromValues(s)
+
                 # update the current state value
                 temp_dic[s] = self.computeQValueFromValues(s, best_action)
+
             # assign the temporary dictionary to the field self.values
             self.values = temp_dic
 
@@ -81,6 +85,7 @@ class ValueIterationAgent(ValueEstimationAgent):
         """
           Return the value of the state (computed in __init__).
         """
+        # look up in the dictionary for the value of the passed state key
         return self.values[state]
 
     # this function does the summation over the next states
@@ -102,12 +107,17 @@ class ValueIterationAgent(ValueEstimationAgent):
         for index, tuple in enumerate(self.mdp.getTransitionStatesAndProbs(state, action)):
             nextState = tuple[0]
             prob = tuple[1]
+
             # get the immediate reward for the state, action, nextState transition.
             r = self.mdp.getReward(state, action, nextState)
-            #print("insideQVlaue", state, action, self.getValue(nextState))
+
+            # get the term associated with one of the s'
             disc_reward = prob * (r + self.discount * self.getValue(nextState))
+
             # accumulate the discounted rewards
             rewardSum = rewardSum + disc_reward
+
+        # report the sum over all the s'
         return rewardSum
 
 
@@ -130,13 +140,16 @@ class ValueIterationAgent(ValueEstimationAgent):
 
         # make a dictionary to store Q(s, a) values (the sum over next states) under each legal action at state
         q_table = util.Counter()
+
         # loop through all the legal actions at state s
         for a in self.mdp.getPossibleActions(state):
+
             # store the discounted reward associated with each legal action as the key
             q_table[a] = self.computeQValueFromValues(state, a)
 
         # find the action key which has the highest value and return it
         best_action = q_table.argMax()
+
         # return the best action
         return best_action
 
